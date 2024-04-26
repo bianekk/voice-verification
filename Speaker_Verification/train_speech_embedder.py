@@ -106,6 +106,7 @@ def test(model_path):
     for e in range(hp.test.epochs):
         batch_avg_EER = 0
         for batch_id, mel_db_batch in enumerate(test_loader):
+            print(mel_db_batch.size())
             assert hp.test.M % 2 == 0
             enrollment_batch, verification_batch = torch.split(mel_db_batch, int(mel_db_batch.size(1)/2), dim=1)
             
