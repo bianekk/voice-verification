@@ -42,8 +42,8 @@ class SpeakerDataset(Dataset):
         mel_dbs = []
         for f in wav_files:
             _, mel_db, _ = mfccs_and_spec(f, wav_process = True)
-            mel_dbs.append(mel_db)
-        return torch.Tensor(mel_dbs)
+            mel_dbs.append(torch.Tensor(mel_db))
+        return torch.stack(mel_dbs)
 
 class SpeakerDatasetPreprocessed(Dataset):
     

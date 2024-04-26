@@ -18,7 +18,7 @@ from speech_embedder_net import SpeechEmbedder, GE2ELoss, get_centroids, get_cos
 
 def train(model_path):
     device = torch.device(hp.device)
-    
+    print("### Loading data ###")
     if hp.data.data_preprocessed:
         train_dataset = SpeakerDatasetPreprocessed()
     else:
@@ -39,9 +39,10 @@ def train(model_path):
     
     embedder_net.train()
     iteration = 0
+    print("### Training ###")
     for e in range(hp.train.epochs):
         total_loss = 0
-        for batch_id, mel_db_batch in enumerate(train_loader): 
+        for batch_id, mel_db_batch in enumerate(train_loader):
             mel_db_batch = mel_db_batch.to(device)
             
             mel_db_batch = torch.reshape(mel_db_batch, (hp.train.N*hp.train.M, mel_db_batch.size(2), mel_db_batch.size(3)))
@@ -148,10 +149,18 @@ def test(model_path):
                     EER_FAR = FAR
                     EER_FRR = FRR
             batch_avg_EER += EER
-            print("\nEER : %0.2f (thres:%0.2f, FAR:%0.2f, FRR:%0.2f)"%(EER,EER_thresh,EER_FAR,EER_FRR))
+            mesg = ("\nEER : %0.2f (thres:%0.2f, FAR:%0.2f, FRR:%0.2f)"%(EER,EER_thresh,EER_FAR,EER_FRR))
+            print(mesg)
+            if hp.train.log_file is not None:
+                with open(hp.test.log_file,'a') as f:
+                    f.write(mesg)
         avg_EER += batch_avg_EER/(batch_id+1)
     avg_EER = avg_EER / hp.test.epochs
-    print("\n EER across {0} epochs: {1:.4f}".format(hp.test.epochs, avg_EER))
+    mesg = ("\n EER across {0} epochs: {1:.4f}".format(hp.test.epochs, avg_EER))
+    print(mesg)
+    if hp.train.log_file is not None:
+        with open(hp.test.log_file,'a') as f:
+            f.write(mesg)
         
 if __name__=="__main__":
     if hp.training:

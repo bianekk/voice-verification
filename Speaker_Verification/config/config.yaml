@@ -1,4 +1,4 @@
-training: !!bool "true"
+training: !!bool "false"
 device: "mps"
 unprocessed_data: './data/voxceleb/*/*.wav'
 ---
@@ -21,7 +21,7 @@ model:
     hidden: 768 #Number of LSTM hidden layer units
     num_layer: 3 #Number of LSTM layers
     proj: 256 #Embedding size
-    model_path: './speech_id_checkpoint/ckpt_epoch_360_batch_id_37.pth' #Model path for testing, inference, or resuming training
+    model_path: './speech_id_checkpoint/ckpt_epoch_360_batch_id_28.pth' #Model path for testing, inference, or resuming training
 ---
 train:
     N : 4 #Number of speakers in batch
@@ -29,7 +29,7 @@ train:
     num_workers: 0 #number of workers for dataloader
     lr: 0.01 
     epochs: 950 #Max training speaker epoch 
-    log_interval: 30 #Epochs before printing progress
+    log_interval: 28 #Epochs before printing progress
     log_file: './speech_id_checkpoint/Stats'
     checkpoint_interval: 60 #Save model after x speaker epochs
     checkpoint_dir: './speech_id_checkpoint'
@@ -46,4 +46,5 @@ test:
     M : 4 #Number of utterances per speaker
     num_workers: 0 #number of workers for data laoder
     epochs: 10 #testing speaker epochs
+    log_file: './speech_id_checkpoint/Results'
 
